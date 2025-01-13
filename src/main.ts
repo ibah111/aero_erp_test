@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { getSwaggerCustomOptions, getSwaggerOptions } from './Utils/Swagger';
+import 'colors';
+import { SqliteDatabaseSeed } from './Modules/Databases/Sqlite.database/Sqlite.seed';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +14,7 @@ async function bootstrap() {
     getSwaggerOptions(),
   );
   SwaggerModule.setup('api', app, document, getSwaggerCustomOptions());
+  await app.get(SqliteDatabaseSeed).sync();
   await app.listen('3000', '0.0.0.0');
   console.log(`server started on ${await app.getUrl()}/api`);
 }
