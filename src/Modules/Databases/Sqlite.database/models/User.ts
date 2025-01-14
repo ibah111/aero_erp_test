@@ -10,9 +10,9 @@ import {
 } from 'sequelize-typescript';
 
 @Table({ tableName: 'Users' })
-export class User extends Model<
-  InferAttributes<User>,
-  InferCreationAttributes<User>
+export class Users extends Model<
+  InferAttributes<Users>,
+  InferCreationAttributes<Users>
 > {
   @PrimaryKey
   @AutoIncrement
