@@ -24,20 +24,20 @@ export class File extends Model<
   @Column(DataType.INTEGER)
   id: number;
 
-  @Column(DataType.STRING)
   @AllowNull(false)
+  @Column(DataType.STRING)
   filename: string;
 
-  @Column(DataType.STRING)
   @AllowNull(false)
+  @Column(DataType.STRING)
   extension: string;
 
-  @Column(DataType.STRING)
   @AllowNull(false)
+  @Column(DataType.STRING)
   mimeType: string;
 
-  @Column(DataType.INTEGER)
   @AllowNull(false)
+  @Column(DataType.INTEGER)
   size: number;
 
   @ForeignKey(() => User)

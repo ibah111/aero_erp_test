@@ -12,7 +12,7 @@ export const up: MigrationFn<QueryInterface> = ({ context }) =>
             autoIncrement: true,
             primaryKey: true,
           },
-          name: {
+          filename: {
             type: DataTypes.STRING,
             allowNull: false,
           },
