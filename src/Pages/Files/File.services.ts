@@ -11,13 +11,16 @@ export class FileService {
   ) {}
 
   async upload({ filename, size, mimeType, extension }: FileUploadInput) {
+    const body = {
+      filename,
+      size,
+      mimeType,
+      extension,
+    };
     try {
       await this.modelFile
         .create({
-          filename,
-          size,
-          mimeType,
-          extension,
+          ...body,
         })
         .then((result) => {
           return {
