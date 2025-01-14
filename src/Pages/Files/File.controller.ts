@@ -34,7 +34,7 @@ export default class FileController {
   })
   @ApiConsumes('multipart/form-data')
   @Post('upload')
-  @FastifyFileInterceptor('file', {})
+  @UseInterceptors(FileInterceptor('file', {}))
   async upload(
     @UploadedFile() file: Express.Multer.File,
     @Query('r_user_id') r_user_id: number,
@@ -42,17 +42,13 @@ export default class FileController {
     if (!file) {
       throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
     }
-
-    const filename = file.originalname;
-    const extension = file.originalname.split('.').pop() || '';
-    const mimeType = file.mimetype;
-    const size = file.size;
-    const buffer = file.buffer;
-    await this.fileService.upload({
+    const { filename, size, mimetype, originalname, buffer } = file;
+    const extension = originalname.split('.').pop();
+    return this.fileService.upload({
       filename,
-      extension,
-      mimeType,
       size,
+      mimeType: mimetype,
+      extension,
       r_user_id,
       buffer,
     });
