@@ -44,6 +44,10 @@ export class File extends Model<
   @Column(DataType.INTEGER)
   r_user_id: number;
 
+  @AllowNull(true)
+  @Column(DataType.BLOB)
+  buffer: Buffer | null;
+
   @BelongsTo(() => User)
   User: User;
 }

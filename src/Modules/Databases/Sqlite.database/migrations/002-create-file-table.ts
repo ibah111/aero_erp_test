@@ -37,6 +37,10 @@ export const up: MigrationFn<QueryInterface> = ({ context }) =>
             onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
+          buffer: {
+            type: DataTypes.BLOB,
+            allowNull: true,
+          },
           createdAt: {
             type: DataTypes.DATE,
             allowNull: false,

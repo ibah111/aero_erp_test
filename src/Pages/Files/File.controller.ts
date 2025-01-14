@@ -9,7 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileService } from './File.services';
 import { Express } from 'express';
 
@@ -21,8 +21,20 @@ export default class FileController {
   @Get(':id')
   async get() {}
 
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @FastifyFileInterceptor('file', {})
   async upload(
     @UploadedFile() file: Express.Multer.File,
     @Query('r_user_id') r_user_id: number,
@@ -30,16 +42,19 @@ export default class FileController {
     if (!file) {
       throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
     }
-    const fileDetails = {
-      filename: file.originalname,
-      extension: file.originalname.split('.').pop() || '',
-      mimeType: file.mimetype,
-      size: file.size,
-      uploadDate: new Date(),
-    };
+
+    const filename = file.originalname;
+    const extension = file.originalname.split('.').pop() || '';
+    const mimeType = file.mimetype;
+    const size = file.size;
+    const buffer = file.buffer;
     await this.fileService.upload({
-      ...fileDetails,
+      filename,
+      extension,
+      mimeType,
+      size,
       r_user_id,
+      buffer,
     });
   }
 }
