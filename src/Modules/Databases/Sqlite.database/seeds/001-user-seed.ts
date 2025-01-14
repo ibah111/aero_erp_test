@@ -1,7 +1,12 @@
 import { QueryInterface } from 'sequelize';
 import { MigrationFn } from 'umzug';
 const default_pull_of_users = [
-  { name: 'Admin', createdAt: new Date(), updatedAt: new Date() },
+  {
+    name: 'Admin',
+    password: 'password',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
 ];
 export const up: MigrationFn<QueryInterface> = async ({ context }) =>
   context.sequelize.transaction((transaction) =>

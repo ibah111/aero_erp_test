@@ -16,6 +16,10 @@ export const up: MigrationFn<QueryInterface> = ({ context }) =>
             type: DataTypes.STRING,
             allowNull: false,
           },
+          password: {
+            allowNull: false,
+            type: DataTypes.STRING,
+          },
           createdAt: {
             type: DataTypes.DATE,
             allowNull: false,
