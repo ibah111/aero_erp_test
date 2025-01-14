@@ -4,15 +4,17 @@ import {
   AutoIncrement,
   Column,
   DataType,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { File } from './File';
 
 @Table({ tableName: 'Users' })
-export class Users extends Model<
-  InferAttributes<Users>,
-  InferCreationAttributes<Users>
+export class User extends Model<
+  InferAttributes<User>,
+  InferCreationAttributes<User>
 > {
   @PrimaryKey
   @AutoIncrement
@@ -24,10 +26,17 @@ export class Users extends Model<
   name: string;
 
   @AllowNull(false)
+  @Column(DataType.STRING)
+  password: string;
+
+  @AllowNull(false)
   @Column(DataType.DATE)
   updatedAt: Date;
 
   @AllowNull(false)
   @Column(DataType.DATE)
   createdAt: Date;
+
+  @HasMany(() => File)
+  files?: File[];
 }
