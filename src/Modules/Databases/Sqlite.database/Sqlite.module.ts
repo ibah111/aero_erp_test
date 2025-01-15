@@ -7,6 +7,7 @@ import { models } from './models';
 export const sqliteDatabaseConfig: SequelizeOptions = {
   dialect: 'sqlite',
   storage: 'database.sqlite',
+  logging: false,
   models,
 };
 
