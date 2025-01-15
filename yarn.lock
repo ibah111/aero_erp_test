@@ -938,6 +938,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/config@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@nestjs/config@npm:3.3.0"
+  dependencies:
+    dotenv: "npm:16.4.5"
+    dotenv-expand: "npm:10.0.0"
+    lodash: "npm:4.17.21"
+  peerDependencies:
+    "@nestjs/common": ^8.0.0 || ^9.0.0 || ^10.0.0
+    rxjs: ^7.1.0
+  checksum: 10/46705cf69f56281d0377f3d3832954bbb7359ea2dce442c5e2311d1c07e846358ab39d9cb00df91bb3a0064ae0ae23431feda0ad53bfc9059b150b4fa8486362
+  languageName: node
+  linkType: hard
+
 "@nestjs/core@npm:^10.0.0":
   version: 10.4.15
   resolution: "@nestjs/core@npm:10.4.15"
@@ -2083,6 +2097,7 @@ __metadata:
   dependencies:
     "@nestjs/cli": "npm:^10.0.0"
     "@nestjs/common": "npm:^10.0.0"
+    "@nestjs/config": "npm:^3.3.0"
     "@nestjs/core": "npm:^10.0.0"
     "@nestjs/jwt": "npm:^10.2.0"
     "@nestjs/passport": "npm:^10.0.3"
@@ -3410,6 +3425,20 @@ __metadata:
   dependencies:
     esutils: "npm:^2.0.2"
   checksum: 10/b4b28f1df5c563f7d876e7461254a4597b8cabe915abe94d7c5d1633fed263fcf9a85e8d3836591fc2d040108e822b0d32758e5ec1fe31c590dc7e08086e3e48
+  languageName: node
+  linkType: hard
+
+"dotenv-expand@npm:10.0.0":
+  version: 10.0.0
+  resolution: "dotenv-expand@npm:10.0.0"
+  checksum: 10/b41eb278bc96b92cbf3037ca5f3d21e8845bf165dc06b6f9a0a03d278c2bd5a01c0cfbb3528ae3a60301ba1a8a9cace30e748c54b460753bc00d4c014b675597
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 10/55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
   languageName: node
   linkType: hard
 
