@@ -10,12 +10,19 @@ export class FileService {
     private readonly modelFile: typeof FileModel,
   ) {}
 
-  async upload({ filename, size, mimeType, extension }: FileUploadInput) {
+  async upload({
+    filename,
+    size,
+    mimeType,
+    extension,
+    buffer,
+  }: FileUploadInput) {
     const body = {
       filename,
       size,
       mimeType,
       extension,
+      buffer,
     };
     try {
       await this.modelFile

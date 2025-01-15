@@ -42,10 +42,12 @@ export default class FileController {
     if (!file) {
       throw new HttpException('No file provided', HttpStatus.BAD_REQUEST);
     }
+    console.log(file);
     const { filename, size, mimetype, originalname, buffer } = file;
     const extension = originalname.split('.').pop();
+    const og = originalname.split('.').shift();
     return this.fileService.upload({
-      filename,
+      filename: filename || og,
       size,
       mimeType: mimetype,
       extension,
