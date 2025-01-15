@@ -24,3 +24,16 @@ export class FileUploadInput {
   @ApiProperty({ type: 'string', format: 'binary' })
   buffer: Buffer;
 }
+
+export class FilePaginationInput {
+  @ApiProperty({
+    default: 1,
+  })
+  @IsNumber()
+  page: number;
+  @ApiProperty({
+    default: 25,
+  })
+  @IsNumber()
+  limit: number;
+}
