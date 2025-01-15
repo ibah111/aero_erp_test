@@ -12,12 +12,18 @@ export const up: MigrationFn<QueryInterface> = ({ context }) =>
             autoIncrement: true,
             primaryKey: true,
           },
-          name: {
+          login: {
             type: DataTypes.STRING,
             allowNull: false,
           },
           password: {
             allowNull: false,
+            type: DataTypes.STRING,
+          },
+          jwt_token: {
+            type: DataTypes.STRING,
+          },
+          refresh_token: {
             type: DataTypes.STRING,
           },
           createdAt: {
