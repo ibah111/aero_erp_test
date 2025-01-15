@@ -23,11 +23,17 @@ export class User extends Model<
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  name: string;
+  login: string;
 
   @AllowNull(false)
   @Column(DataType.STRING)
   password: string;
+
+  @Column(DataType.STRING)
+  jwt_token: string;
+
+  @Column(DataType.STRING)
+  refresh_token: string;
 
   @AllowNull(false)
   @Column(DataType.DATE)
@@ -38,5 +44,5 @@ export class User extends Model<
   createdAt: Date;
 
   @HasMany(() => File)
-  files?: File[];
+  Files?: File[];
 }
