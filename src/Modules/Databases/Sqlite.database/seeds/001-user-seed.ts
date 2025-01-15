@@ -2,7 +2,7 @@ import { QueryInterface } from 'sequelize';
 import { MigrationFn } from 'umzug';
 const default_pull_of_users = [
   {
-    login: 'Admin',
+    login: 'admin',
     password: 'password',
     createdAt: new Date(),
     updatedAt: new Date(),
