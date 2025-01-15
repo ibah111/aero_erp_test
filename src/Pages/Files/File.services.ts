@@ -16,6 +16,7 @@ export class FileService {
     mimeType,
     extension,
     buffer,
+    r_user_id,
   }: FileUploadInput) {
     const body = {
       filename,
@@ -23,6 +24,7 @@ export class FileService {
       mimeType,
       extension,
       buffer,
+      r_user_id,
     };
     try {
       await this.modelFile

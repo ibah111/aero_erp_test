@@ -29,6 +29,7 @@ export const up: MigrationFn<QueryInterface> = ({ context }) =>
             allowNull: false,
           },
           r_user_id: {
+            allowNull: false,
             type: DataTypes.INTEGER,
             references: {
               model: 'Users',

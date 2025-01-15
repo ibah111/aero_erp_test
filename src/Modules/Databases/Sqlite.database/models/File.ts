@@ -40,6 +40,7 @@ export class File extends Model<
   @Column(DataType.INTEGER)
   size: number;
 
+  @AllowNull(false)
   @ForeignKey(() => User)
   @Column(DataType.INTEGER)
   r_user_id: number;
