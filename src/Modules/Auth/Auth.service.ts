@@ -40,7 +40,7 @@ export class AuthService {
         if (result.length > 0)
           throw new Error('User with this login is already existed');
 
-        const password = await bcrypt.hash(plainPassword, this.SALT);
+        const password = await bcrypt.hash(plainPassword, Number(this.SALT));
         const user = await this.modelUser.create({
           login,
           password,
