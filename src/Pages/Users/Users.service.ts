@@ -45,9 +45,9 @@ export default class UsersService {
           .update({
             refresh_token,
           })
-          .then(() => {
-            console.log('refresh token updated');
-            return 'refresh token updated';
+          .then((res) => {
+            console.log('refresh_token updated'.green);
+            return res.refresh_token;
           });
       }
     } catch (error) {

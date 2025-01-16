@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import UsersModule from 'src/Pages/Users/Users.module';
@@ -7,12 +7,17 @@ import { AuthController } from './Auth.controller';
 import { AuthService } from './auth.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '../Databases/Sqlite.database/models/User';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     SequelizeModule.forFeature([User], 'sqlite'),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
+      global: true,
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '15m' },
     }),
@@ -22,4 +27,8 @@ import { User } from '../Databases/Sqlite.database/models/User';
   controllers: [AuthController],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule implements OnModuleInit {
+  onModuleInit() {
+    console.log(process.env.JWT_SECRET);
+  }
+}

@@ -21,6 +21,7 @@ export class AuthService {
       username,
     });
     if (user && (await bcrypt.compare(password, user.password))) {
+      console.log('user validated\n'.green, user.dataValues);
       return user;
     }
     throw new UnauthorizedException('Invalid credentials');
@@ -50,15 +51,18 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = { username: user.login, sub: user.id };
+    const payload = { login: user.login, sub: user.id };
     const refresh_token = this.generateRefreshToken(user.id);
-
-    await this.usersService.updateRefreshToken(user.id, refresh_token);
-
-    return {
-      accessToken: this.jwtService.sign(payload),
-      refresh_token,
-    };
+    try {
+      await this.usersService.updateRefreshToken(user.id, refresh_token);
+      const accessToken = this.jwtService.sign(payload);
+      return {
+        accessToken,
+        refresh_token,
+      };
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async refresh(refresh_token: string) {
@@ -78,9 +82,9 @@ export class AuthService {
       const newRefreshToken = this.generateRefreshToken(user.id);
 
       await this.usersService.updateRefreshToken(user.id, newRefreshToken);
-
+      const accessToken = this.jwtService.sign(newPayload);
       return {
-        accessToken: this.jwtService.sign(newPayload),
+        accessToken,
         refreshToken: newRefreshToken,
       };
     } catch (error) {
@@ -91,9 +95,13 @@ export class AuthService {
   }
 
   private generateRefreshToken(user_id: number) {
-    return this.jwtService.sign(
-      { sub: user_id },
-      { secret: this.REFRESH_SECRET_KEY, expiresIn: '7d' },
-    );
+    try {
+      return this.jwtService.sign(
+        { sub: user_id },
+        { secret: this.REFRESH_SECRET_KEY, expiresIn: '7d' },
+      );
+    } catch (error) {
+      throw new Error('generateRefreshToken\n'.red + error);
+    }
   }
 }
