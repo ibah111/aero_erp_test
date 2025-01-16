@@ -6,7 +6,19 @@ import 'colors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const config = new DocumentBuilder().setTitle('Test').build();
+  const config = new DocumentBuilder()
+    .setTitle('Test')
+    .setDescription('API for test task application')
+    .setVersion('0.1')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'JWT',
+    )
+    .build();
   const document = SwaggerModule.createDocument(
     app,
     config,

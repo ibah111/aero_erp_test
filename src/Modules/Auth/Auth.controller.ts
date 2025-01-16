@@ -2,7 +2,10 @@ import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from '../Guards/jwt-auth.guard';
 import { AuthLoginInput, AuthRefreshInput } from './Auth.input';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
+@ApiBearerAuth('JWT')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
