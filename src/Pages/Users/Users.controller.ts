@@ -1,6 +1,7 @@
-import { Controller, Get, OnModuleInit } from '@nestjs/common';
+import { Body, Controller, Get, OnModuleInit, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import UsersService from './Users.service';
+import { FindUserInput } from './Users.input';
 
 @ApiTags('Users')
 @Controller('Users')
@@ -24,5 +25,12 @@ export default class UsersController implements OnModuleInit {
   @Get('getUsers')
   async getUsers() {
     return await this.service.getUsers();
+  }
+
+  @Post('findUser')
+  async findUser(@Body() body: FindUserInput) {
+    return await this.service.findUser({
+      ...body,
+    });
   }
 }
