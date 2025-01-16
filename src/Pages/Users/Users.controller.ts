@@ -1,7 +1,6 @@
-import { Body, Controller, Get, OnModuleInit, Post } from '@nestjs/common';
+import { Controller, Get, OnModuleInit } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import UsersService from './Users.service';
-import { SignInput } from './Users.input';
 
 @ApiTags('Users')
 @Controller('Users')
@@ -15,17 +14,5 @@ export default class UsersController implements OnModuleInit {
   @Get('getUsers')
   async getUsers() {
     return await this.service.getUsers();
-  }
-
-  @Post('signUp')
-  async signUp(@Body() body: SignInput) {
-    return await this.service.signUp(body, Number(this.salt_value));
-  }
-
-  @Post('signIn')
-  async signIn(@Body() body: SignInput) {
-    return await this.service.signIn({
-      ...body,
-    });
   }
 }
