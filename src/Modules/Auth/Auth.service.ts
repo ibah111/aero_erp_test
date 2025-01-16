@@ -2,15 +2,20 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import UsersService from 'src/Pages/Users/Users.service';
+import { User } from '../Databases/Sqlite.database/models/User';
+import { AuthLoginInput } from './Auth.input';
+import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    @InjectModel(User, 'sqlite') private readonly modelUser: typeof User,
   ) {}
   REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY;
-
+  SALT = process.env.SALT;
   async validateUser(username: string, password: string) {
     const user = await this.usersService.findUser({
       username,
@@ -21,8 +26,31 @@ export class AuthService {
     throw new UnauthorizedException('Invalid credentials');
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.id };
+  async signup({ login, password: plainPassword }: AuthLoginInput) {
+    return await this.modelUser
+      .findAll({
+        attributes: ['login'],
+        where: {
+          login: {
+            [Op.like]: `%${login.toLowerCase()}%`,
+          },
+        },
+      })
+      .then(async (result) => {
+        if (result.length > 0)
+          throw new Error('User with this login is already existed');
+
+        const password = await bcrypt.hash(plainPassword, this.SALT);
+        const user = await this.modelUser.create({
+          login,
+          password,
+        });
+        return user ? true : false;
+      });
+  }
+
+  async login(user: User) {
+    const payload = { username: user.login, sub: user.id };
     const refresh_token = this.generateRefreshToken(user.id);
 
     await this.usersService.updateRefreshToken(user.id, refresh_token);

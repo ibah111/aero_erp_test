@@ -6,7 +6,7 @@ export class AuthLoginInput {
     default: 'admin',
   })
   @IsString()
-  username: string;
+  login: string;
   @ApiProperty({
     default: 'password',
   })

@@ -5,9 +5,12 @@ import UsersModule from 'src/Pages/Users/Users.module';
 import { JwtStrategy } from '../Strategy/Jwt.strategy';
 import { AuthController } from './Auth.controller';
 import { AuthService } from './auth.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { User } from '../Databases/Sqlite.database/models/User';
 
 @Module({
   imports: [
+    SequelizeModule.forFeature([User], 'sqlite'),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,

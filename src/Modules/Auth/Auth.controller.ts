@@ -7,20 +7,25 @@ import { AuthLoginInput, AuthRefreshInput } from './Auth.input';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
-  async login(@Body() { username, password }: AuthLoginInput) {
+  @Post('signup')
+  async signup(@Body() body: AuthLoginInput) {
+    return await this.authService.signup(body);
+  }
+
+  @Post('signin')
+  async login(@Body() { login: username, password }: AuthLoginInput) {
     return this.authService
       .validateUser(username, password)
       .then((user) => this.authService.login(user));
   }
 
-  @Post('refresh')
-  async refresh(@Body() { refresh_token }: AuthRefreshInput) {
+  @Post('signin/refresh_token')
+  async refresh_token(@Body() { refresh_token }: AuthRefreshInput) {
     return this.authService.refresh(refresh_token);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('protected')
+  @Post('check_protected')
   protectedRoute(@Req() req: any) {
     return { message: 'You have access to this route', user: req.user };
   }
