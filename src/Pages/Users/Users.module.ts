@@ -3,10 +3,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/Modules/Databases/Sqlite.database/models/User';
 import UsersController from './Users.controller';
 import UsersService from './Users.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User], 'sqlite')],
+  imports: [SequelizeModule.forFeature([User], 'sqlite'), JwtModule],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export default class UsersModule {}

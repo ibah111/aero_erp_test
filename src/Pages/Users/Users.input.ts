@@ -10,3 +10,8 @@ export class SignInput {
   })
   password: string;
 }
+
+export class FindUserInput {
+  id?: number;
+  username?: string;
+}
