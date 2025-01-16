@@ -6,7 +6,7 @@ import { SignInput } from './Users.input';
 @ApiTags('Users')
 @Controller('Users')
 export default class UsersController implements OnModuleInit {
-  salt_value = process.env.SALT_VALUE;
+  salt_value = process.env.SALT;
   constructor(private readonly service: UsersService) {}
   onModuleInit() {
     console.log('salt'.yellow, this.salt_value);
