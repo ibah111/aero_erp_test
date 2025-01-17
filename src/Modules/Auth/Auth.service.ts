@@ -50,8 +50,8 @@ export class AuthService {
       });
   }
 
-  async login(user: User) {
-    const payload = { login: user.login, sub: user.id };
+  async login(user: User, device_id: string) {
+    const payload = { login: user.login, sub: user.id, device_id };
     const refresh_token = this.generateRefreshToken(user.id);
     try {
       await this.usersService.updateRefreshToken(user.id, refresh_token);
@@ -59,11 +59,19 @@ export class AuthService {
       return {
         accessToken,
         refresh_token,
+        device_id,
       };
     } catch (error) {
       throw new Error(error);
     }
   }
+
+  async logout(token: string) {
+    const decoded = this.jwtService.decode(token);
+    console.log(decoded);
+  }
+
+  async logoutAll() {}
 
   async refresh(refresh_token: string) {
     try {
