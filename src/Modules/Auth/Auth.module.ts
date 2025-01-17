@@ -8,6 +8,7 @@ import { AuthService } from './Auth.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '../Databases/Sqlite.database/models/User';
 import { ConfigModule } from '@nestjs/config';
+import TokenModule from '../Token/Token.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
       signOptions: { expiresIn: '15m' },
     }),
     UsersModule,
+    TokenModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
