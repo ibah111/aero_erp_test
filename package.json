@@ -39,7 +39,8 @@
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
-    "umzug": "^3.8.2"
+    "umzug": "^3.8.2",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.9",
