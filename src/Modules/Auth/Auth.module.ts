@@ -8,10 +8,11 @@ import { AuthService } from './Auth.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '../Databases/Sqlite.database/models/User';
 import { ConfigModule } from '@nestjs/config';
-import TokenModule from '../Token/Token.module';
+import { TokenModule } from '../Token/Token.module';
 
 @Module({
   imports: [
+    TokenModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -20,10 +21,9 @@ import TokenModule from '../Token/Token.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '15m' },
+      signOptions: { expiresIn: '10m' },
     }),
     UsersModule,
-    TokenModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
