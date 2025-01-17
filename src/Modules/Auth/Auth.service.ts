@@ -6,10 +6,12 @@ import { User } from '../Databases/Sqlite.database/models/User';
 import { AuthLoginInput } from './Auth.input';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import TokenService from '../Token/Token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly tokenService: TokenService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     @InjectModel(User, 'sqlite') private readonly modelUser: typeof User,
@@ -56,6 +58,10 @@ export class AuthService {
     try {
       await this.usersService.updateRefreshToken(user.id, refresh_token);
       const accessToken = this.jwtService.sign(payload);
+      const obj = this.jwtService.decode(accessToken, {
+        json: true,
+      });
+      console.log(obj);
       return {
         accessToken,
         refresh_token,
@@ -66,30 +72,31 @@ export class AuthService {
     }
   }
 
-  async logout(token: string) {
-    const decoded = this.jwtService.decode(token);
-    console.log(decoded);
+  async logout(token: string): Promise<void> {
+    this.tokenService.addToBlacklist(token);
   }
 
   async logoutAll() {}
 
-  async refresh(refresh_token: string) {
+  async refresh(refresh_token: string, headers: any) {
+    const access_token = headers.authorization.split(' ').pop();
+    const obj = this.jwtService.decode(access_token);
+    const device_id = obj.device_id;
     try {
-      const decoded = this.jwtService.verify(refresh_token, {
+      const verify = this.jwtService.verify(refresh_token, {
         secret: this.REFRESH_SECRET_KEY,
       });
       const user = await this.usersService.findUser({
-        id: decoded.sub,
+        id: verify.sub,
       });
 
       if (user.refresh_token !== refresh_token) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      const newPayload = { username: user.login, sub: user.id };
+      const newPayload = { username: user.login, sub: user.id, device_id };
       const newRefreshToken = this.generateRefreshToken(user.id);
 
-      await this.usersService.updateRefreshToken(user.id, newRefreshToken);
       const accessToken = this.jwtService.sign(newPayload);
       return {
         accessToken,

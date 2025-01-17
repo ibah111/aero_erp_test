@@ -30,9 +30,6 @@ export class User extends Model<
   password: string;
 
   @Column(DataType.STRING)
-  jwt_token: string;
-
-  @Column(DataType.STRING)
   refresh_token: string;
 
   @AllowNull(false)

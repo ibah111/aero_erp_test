@@ -46,7 +46,7 @@ export default class UsersService {
             refresh_token,
           })
           .then((res) => {
-            console.log('refresh_token updated'.green);
+            console.log('Refresh token updated'.green);
             return res.refresh_token;
           });
       }

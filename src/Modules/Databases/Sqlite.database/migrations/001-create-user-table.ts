@@ -20,9 +20,6 @@ export const up: MigrationFn<QueryInterface> = ({ context }) =>
             allowNull: false,
             type: DataTypes.STRING,
           },
-          jwt_token: {
-            type: DataTypes.STRING,
-          },
           refresh_token: {
             type: DataTypes.STRING,
           },
