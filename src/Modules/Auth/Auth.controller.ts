@@ -9,7 +9,7 @@ import {
 import { AuthService } from './Auth.service';
 import { JwtAuthGuard } from '../Guards/Jwt-auth.guard';
 import { AuthLoginInput, AuthRefreshInput } from './Auth.input';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import generateDeviceId from 'src/Utils/generateDeviceId';
 
 @ApiTags('Auth')
@@ -23,6 +23,10 @@ export class AuthController {
     return await this.authService.signup(body);
   }
 
+  @ApiHeader({
+    name: 'device_id',
+    required: false,
+  })
   @Post('signin')
   async login(
     @Body() { login: username, password }: AuthLoginInput,
@@ -45,15 +49,16 @@ export class AuthController {
     await this.authService.logout(token);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('logout-all')
-  async logoutAll(@Headers() headers: any) {
-    await this.authService.logoutAll();
-  }
-
+  @ApiHeader({
+    name: 'device_id',
+    required: true,
+  })
   @Post('signin/refresh_token')
-  async refresh_token(@Body() { refresh_token }: AuthRefreshInput) {
-    return this.authService.refresh(refresh_token);
+  async refresh_token(
+    @Body() { refresh_token }: AuthRefreshInput,
+    @Headers('device_id') device_id: string,
+  ) {
+    return this.authService.refresh(refresh_token, device_id);
   }
 
   @UseGuards(JwtAuthGuard)
