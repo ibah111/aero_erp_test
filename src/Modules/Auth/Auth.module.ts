@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import UsersModule from 'src/Pages/Users/Users.module';
 import { JwtStrategy } from '../Strategy/Jwt.strategy';
 import { AuthController } from './Auth.controller';
-import { AuthService } from './auth.service';
+import { AuthService } from './Auth.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '../Databases/Sqlite.database/models/User';
 import { ConfigModule } from '@nestjs/config';

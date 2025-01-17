@@ -6,8 +6,8 @@ import {
   UseGuards,
   Headers,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from '../Guards/jwt-auth.guard';
+import { AuthService } from './Auth.service';
+import { JwtAuthGuard } from '../Guards/Jwt-auth.guard';
 import { AuthLoginInput, AuthRefreshInput } from './Auth.input';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import generateDeviceId from 'src/Utils/generateDeviceId';
@@ -24,11 +24,13 @@ export class AuthController {
   }
 
   @Post('signin')
-  async login(@Body() { login: username, password }: AuthLoginInput, @Headers('device_id') device_id?: string) {
-    
+  async login(
+    @Body() { login: username, password }: AuthLoginInput,
+    @Headers('device_id') device_id?: string,
+  ) {
     if (!device_id) {
-      device_id = await generateDeviceId() 
-    } 
+      device_id = await generateDeviceId();
+    }
     return this.authService
       .validateUser(username, password)
       .then((user) => this.authService.login(user, device_id));
@@ -39,15 +41,15 @@ export class AuthController {
   async logout(@Headers() headers: any) {
     console.log(headers);
     const token = headers.authorization.split(' ').pop();
-    const device 
+
     await this.authService.logout(token);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('logout-all')
-  async logoutAll() {
-    await this.
-    }
+  async logoutAll(@Headers() headers: any) {
+    await this.authService.logoutAll();
+  }
 
   @Post('signin/refresh_token')
   async refresh_token(@Body() { refresh_token }: AuthRefreshInput) {
