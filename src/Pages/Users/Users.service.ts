@@ -3,11 +3,13 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/Modules/Databases/Sqlite.database/models/User';
 import { FindUserInput } from './Users.input';
 import { Op } from 'sequelize';
+import { File as FileModel } from 'src/Modules/Databases/Sqlite.database/models/File';
 
 @Injectable()
 export default class UsersService {
   constructor(
     @InjectModel(User, 'sqlite') private readonly modelUsers: typeof User,
+    @InjectModel(File, 'sqlite') private readonly modelFile: typeof File,
   ) {}
   async getUsers() {
     return await this.modelUsers.findAll();
@@ -53,5 +55,19 @@ export default class UsersService {
     } catch (error) {
       throw new Error('Error updating refreshToken'.red + error);
     }
+  }
+
+  async info(id: number) {
+    return await this.modelUsers.findOne({
+      where: {
+        id,
+      },
+      include: [
+        {
+          model: FileModel,
+          attributes: ['id', 'filename', 'extension', 'mimeType', 'size'],
+        },
+      ],
+    });
   }
 }

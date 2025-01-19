@@ -11,20 +11,24 @@ import {
   Query,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileService } from './File.services';
 import { Express } from 'express';
 import { FilePaginationInput, FileUploadInput } from './File.input';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/Modules/Guards/Jwt-auth.guard';
 
 @ApiTags('File')
 @Controller('File')
+@ApiBearerAuth('JWT')
 export default class FileController {
   constructor(private readonly fileService: FileService) {}
 
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     schema: {
       type: 'object',
@@ -62,6 +66,7 @@ export default class FileController {
       .catch(() => new Error(`Ошибка загрузки файла`));
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('download/:id')
   async downloadFile(@Param('id') id: string, @Res() res: Response) {
     const file = await this.fileService.download(Number(id));
@@ -82,11 +87,13 @@ export default class FileController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getFile(@Param('id') id: number) {
     return await this.fileService.getFile(Number(id));
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('list')
   async getList(@Body() body: FilePaginationInput) {
     return await this.fileService.list({
@@ -94,6 +101,7 @@ export default class FileController {
     });
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiBody({
     schema: {
       type: 'object',
@@ -125,6 +133,7 @@ export default class FileController {
     await this.fileService.update(body, r_user_id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   async delete(@Param('id') id: number) {
     return await this.fileService.deleteFile(id);
