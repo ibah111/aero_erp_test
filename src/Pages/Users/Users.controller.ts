@@ -25,6 +25,8 @@ export default class UsersController implements OnModuleInit {
     private readonly jwtService: JwtService,
   ) {}
   onModuleInit() {
+    /**
+     * 
     console.log('salt'.yellow, '===', this.salt);
     console.log(
       'JWT_SECRET is'.yellow,
@@ -34,6 +36,7 @@ export default class UsersController implements OnModuleInit {
       'REFRESH_SECRET_KEY is'.yellow,
       this.REFRESH_SECRET_KEY ? 'loaded'.green : 'empty'.red,
     );
+    */
   }
 
   @UseGuards(JwtAuthGuard)

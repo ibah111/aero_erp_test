@@ -1,7 +1,6 @@
 import {
   CanActivate,
   ExecutionContext,
-  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -20,19 +19,17 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     private readonly moodelBlacklistTokens: typeof BlacklistTokens,
   ) {
     super();
+    this.clearBlackList();
   }
   public blacklist = new Array<string>();
 
   public async addToBlacklist(token: string): Promise<void> {
     const jwtDecode = this.jwtService.decode(token);
-
-    await this.moodelBlacklistTokens
-      .create({
-        token,
-        r_user_id: jwtDecode.sub,
-        expired_in: jwtDecode.exp,
-      })
-      .then((res) => console.log('Added to blacklist'.toUpperCase().red, res));
+    await this.moodelBlacklistTokens.create({
+      token,
+      r_user_id: jwtDecode.sub,
+      expired_in: jwtDecode.exp,
+    });
   }
 
   public async isBlacklisted(
@@ -43,7 +40,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
         token,
       },
     });
-    console.log('isBlackListed: ', tokenCheck);
     if (tokenCheck === null) {
       return false;
     } else return true;
@@ -55,9 +51,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     if (!token) {
       throw new UnauthorizedException('Token not provided');
     }
-
     const check = await this.isBlacklisted(token);
-    console.log('isBlacklisted: ', check);
     if (check === true) {
       return false;
     }
@@ -66,25 +60,30 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
 
   @Cron(CronExpression.EVERY_MINUTE)
   async clearBlackList() {
-    const currUnixTimeMs = Date.now();
-    const unixSec = Math.floor(currUnixTimeMs / 1000);
+    const date = new Date();
+    const unixTimeSec = Math.floor(date.getTime() / 1000);
     const tokens = await this.moodelBlacklistTokens.findAll({
-      attributes: ['id', 'expired_in'],
+      attributes: ['id', 'expired_in', 'token'],
       where: {
         expired_in: {
-          [Op.gte]: unixSec,
+          [Op.lt]: unixTimeSec,
         },
       },
     });
+
+    const all = await this.moodelBlacklistTokens.findAll();
+    for (const element of all) {
+      const time_last = element.expired_in - unixTimeSec;
+      console.log('time last: ', time_last / 60);
+    }
+
     const collection = tokens.map((item) => item.id);
-    await this.moodelBlacklistTokens
-      .destroy({
-        where: {
-          id: {
-            [Op.in]: collection,
-          },
+    await this.moodelBlacklistTokens.destroy({
+      where: {
+        id: {
+          [Op.in]: collection,
         },
-      })
-      .then((items) => console.log('tokens been destoyed count: ', items));
+      },
+    });
   }
 }

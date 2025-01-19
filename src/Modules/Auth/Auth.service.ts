@@ -58,15 +58,16 @@ export class AuthService {
     try {
       await this.usersService.updateRefreshToken(user.id, refresh_token);
       const accessToken = this.jwtService.sign(payload);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const obj = this.jwtService.decode(accessToken, {
         json: true,
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const returnObj = {
         accessToken,
         refresh_token,
         device_id,
       };
-      console.log(obj, returnObj);
       return accessToken;
     } catch (error) {
       throw new Error(error);
