@@ -43,9 +43,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(@Headers() headers: any) {
-    console.log(headers);
     const token = headers.authorization.split(' ').pop();
-
     await this.authService.logout(token);
   }
 

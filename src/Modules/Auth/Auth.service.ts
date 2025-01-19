@@ -6,12 +6,13 @@ import { User } from '../Databases/Sqlite.database/models/User';
 import { AuthLoginInput } from './Auth.input';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
-import TokenService from '../Token/Token.service';
+import generateDeviceId from 'src/Utils/generateDeviceId';
+import { JwtAuthGuard } from '../Guards/Jwt-auth.guard';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly tokenService: TokenService,
+    private readonly jwtAuthGuard: JwtAuthGuard,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     @InjectModel(User, 'sqlite') private readonly modelUser: typeof User,
@@ -23,7 +24,6 @@ export class AuthService {
       username,
     });
     if (user && (await bcrypt.compare(password, user.password))) {
-      console.log('user validated\n'.green, user.dataValues);
       return user;
     }
     throw new UnauthorizedException('Invalid credentials');
@@ -48,7 +48,7 @@ export class AuthService {
           login,
           password,
         });
-        return user ? true : false;
+        return this.login(user, await generateDeviceId());
       });
   }
 
@@ -61,19 +61,20 @@ export class AuthService {
       const obj = this.jwtService.decode(accessToken, {
         json: true,
       });
-      console.log(obj);
-      return {
+      const returnObj = {
         accessToken,
         refresh_token,
         device_id,
       };
+      console.log(obj, returnObj);
+      return accessToken;
     } catch (error) {
       throw new Error(error);
     }
   }
 
   async logout(token: string): Promise<void> {
-    this.tokenService.addToBlacklist(token);
+    this.jwtAuthGuard.addToBlacklist(token);
   }
 
   async logoutAll() {}
